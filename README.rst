@@ -35,11 +35,11 @@ supported:
        Retrieves the details of the given server from SUSE Manager
 
   ``/api/v1/ov/servers`` (``GET``)
-       Retrieves a list of servers from HPE OpenView
+       Retrieves a list of servers from HPE OneView
 
   ``/api/v1/ov/servers/{id}`` (``GET``)
-       Retrieves the details of the given server from HPE OpenView
+       Retrieves the details of the given server from HPE OneView
 
   ``/api/v1/clm/...``
-       Requests to this URL are forwarded to the correspondingin
+       Requests to this URL are forwarded to the corresponding
        endpoint under ``/api/v2`` in the Ardana Service
