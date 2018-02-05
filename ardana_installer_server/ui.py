@@ -64,7 +64,7 @@ def save_progress():
 def insert_servers():
     """Inserts a list of servers to the server table.
 
-    'id' and 'source' fields must be unique
+    'uid' and 'source' fields must be unique
 
     **Example Request**:
 
@@ -79,21 +79,21 @@ def insert_servers():
     try:
         data = request.get_json()
 
-        # Check for dupes and missing id & server keys
+        # Check for dupes and missing uid & server keys
         for entry in data:
-            if not set(['id', 'source']).issubset(entry):
+            if not set(['uid', 'source']).issubset(entry):
                 return jsonify(error="There is one or more entries missing "
-                                     "id or source"), 400
-            sid = entry['id']
+                                     "uid or source"), 400
+            sid = entry['uid']
             src = entry['source']
             if not set(src.split(',')).issubset(['sm', 'ov', 'manual']):
-                return jsonify(error="source=%s for id=%s is "
+                return jsonify(error="source=%s for uid=%s is "
                                      "invalid" % (src, sid)), 400
             server_entries = server_table.search(
-                (server.id == sid) & (server.source == src))
+                (server.uid == sid) & (server.source == src))
             if server_entries:
                 return jsonify(error="There is an entry already matching "
-                                     "id=%s and server=%s" % (sid, src)), 400
+                                     "uid=%s and server=%s" % (sid, src)), 400
 
         server_table.insert_multiple(server for server in data)
         return jsonify(SUCCESS)
@@ -131,7 +131,7 @@ def get_servers():
 def update_server():
     """Update a single server entry (dict) into the server table.
 
-    'id' and 'source' fields must be unique
+    'uid' and 'source' fields must be unique
 
     **Example Request**:
 
@@ -145,21 +145,21 @@ def update_server():
     server = Query()
     try:
         entry = request.get_json()
-        if not set(['id', 'source']).issubset(entry):
+        if not set(['uid', 'source']).issubset(entry):
             return jsonify(error="There is one or more entries missing "
-                                 "id or source"), 400
-        sid = entry['id']
+                                 "uid or source"), 400
+        sid = entry['uid']
         src = entry['source']
         if not set(src.split(',')).issubset(['sm', 'ov', 'manual']):
-            return jsonify(error="source=%s for id=%s is "
+            return jsonify(error="source=%s for uid=%s is "
                                  "invalid" % (src, sid)), 400
         server_entries = server_table.search(
-            (server.id == sid) & (server.source == src))
+            (server.uid == sid) & (server.source == src))
         if not server_entries:
-            return jsonify(error="id:%s; source:%s not found "
+            return jsonify(error="uid:%s; source:%s not found "
                                  "to be updated" % (sid, src)), 404
         server_table.remove(
-            (server.id == sid) & (server.source == src))
+            (server.uid == sid) & (server.source == src))
         server_table.insert(entry)
         return jsonify(SUCCESS)
     except Exception:
